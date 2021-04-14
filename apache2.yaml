@@ -1,0 +1,88 @@
+- hosts: all
+  remote_user: ubuntu
+  become: yes
+  tasks:
+        - name: Update apt-get repo and cache
+          apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+
+        - name: Upgrade all apt packages
+          apt: upgrade=dist force_apt_get=yes
+
+        - name: Installing apache2 and Tools
+          apt: name={{item}} state=present update_cache=yes
+          with_items:
+                  - curl
+                  - libapache2-mod-wsgi
+                  - apache2-utils
+                  - ssl-cert
+                  - python-pip
+                  - python-virtualenv
+                  - apache2
+
+        - name: Installing virtualenv
+          command:
+            cmd: sudo pip install virtualenv
+
+        - name: create application directory structure
+          command:
+            cmd: mkdir -p /var/www/FlaskApp/FlaskApp/
+
+        - name: create static and template directories
+          command:
+            chdir: /var/www/FlaskApp/FlaskApp/
+            cmd: mkdir static templates
+
+        - name: Setting Instance Hostname
+          command:         
+            cmd: hostnamectl set-hostname www.mywebsite.com
+
+        - name: copy webapp in application directory 
+          copy:
+            src: /Users/emmanuellontsi/Documents/Project/webapp.py
+            dest: /var/www/FlaskApp/FlaskApp/webapp.py
+            mode: '0777'
+
+        - name: copy FlaskApp.conf in application directory 
+          copy:
+            src: /Users/emmanuellontsi/Documents/Project/FlaskApp.conf
+            dest: /etc/apache2/sites-available/FlaskApp.conf
+            mode: '0777'
+
+        - name: copy flaskapp.wsgi to /var/www/FlaskApp
+          copy:
+            src: /Users/emmanuellontsi/Documents/Project/flaskapp.wsgi
+            dest: /var/www/FlaskApp/flaskapp.wsgi
+            mode: '0777' 
+
+        - name: change to application directory
+          shell:
+            chdir: /var/www/FlaskApp/FlaskApp/
+            cmd: sudo pip install flask
+
+        - name: Run the python application
+          command: 
+            chdir: /var/www/FlaskApp/FlaskApp/
+            cmd: sudo a2ensite FlaskApp
+
+        - name: Copy certificate to flaskapp directory
+          copy:
+            src: /Users/emmanuellontsi/Documents/Project/webapp-cert.pem
+            dest: /var/www/FlaskApp/webapp-cert.pem
+
+        - name: Copy certificate key file to flaskapp directory
+          copy:
+            src: /Users/emmanuellontsi/Documents/Project/webapp-key.pem
+            dest: /var/www/FlaskApp/webapp-key.pem
+      
+        - name: Ensure apache2 is started
+          service: name=apache2 state=restarted
+
+        - name: Run the python application
+          command: 
+            chdir: /var/www/FlaskApp/FlaskApp/
+            cmd: python webapp.py
+
+
+
+          
+
