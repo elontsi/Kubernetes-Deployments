@@ -12,7 +12,7 @@ COPY webapp-cert.pem .
 
 COPY webapp-key.pem .
 
-RUN pip install -r requirements.txt
+#RUN pip install -r requirements.txt
 
 COPY webapp.py .
 
