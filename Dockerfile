@@ -12,9 +12,9 @@ COPY webapp-cert.pem .
 
 COPY webapp-key.pem .
 
-RUN sudo apt update -y
+RUN apt update -y
 
-RUN sudo apt install python3-pip -y
+RUN apt install python3-pip -y
 
 #RUN pip install -r requirements.txt
 
