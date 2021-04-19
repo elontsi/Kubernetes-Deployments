@@ -13,7 +13,7 @@ metadata:
     specs:
       containers:
       - name: python-app
-        image: elontsi007/python-app1
+        image: elontsi007/python-app1:tagVersion
         resources:
           limits:
             memory: "128Mi"
