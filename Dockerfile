@@ -10,8 +10,10 @@ COPY webapp-cert.pem .
 
 COPY webapp-key.pem .
 
-RUN apt-get update -y
-
 COPY webapp.py .
+
+USER root
+
+RUN apt-get update -y
 
 CMD ["python3.9", "webapp.py"]
