@@ -14,6 +14,4 @@ COPY webapp.py .
 
 USER root
 
-RUN apt-get update -y
-
 CMD ["python3.9", "webapp.py"]
