@@ -10,7 +10,7 @@ COPY webapp-cert.pem .
 
 COPY webapp-key.pem .
 
-RUN apt update -y
+RUN apt-get update -y
 
 COPY webapp.py .
 
