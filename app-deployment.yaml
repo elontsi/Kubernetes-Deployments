@@ -1,5 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
+namespace: jenkins
 metadata:
   name: python-app
 spec:
